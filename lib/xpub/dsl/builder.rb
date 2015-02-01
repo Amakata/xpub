@@ -32,7 +32,7 @@ module Xpub
    end
 
    def tmp_path file
-    "#{Dir::getwd}/tmp/#{file}"
+    "#{Dir::getwd}/tmp/#{@book.name}/#{file}"
    end
 
    def output_path file
@@ -196,6 +196,8 @@ module Xpub
    end
 
    def build option
+    FileUtils.mkdir_p(tmp_path "") unless FileTest.exist?(tmp_path "")
+
     build_epub_metadata option
 
     if option['pandoc-json-output']
@@ -328,6 +330,7 @@ module Xpub
    end
 
    def build option
+    FileUtils.mkdir_p(tmp_path "") unless FileTest.exist?(tmp_path "")
     if option['pandoc-json-output']
      cmd_exec pandoc_cmd, ["-o", json_path, "-t", "json"].concat(pandoc_option option).concat(vars_option).concat(@book.src_files.map{ |f| f.full_path }), option
     end
