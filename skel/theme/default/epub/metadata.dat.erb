@@ -1,0 +1,43 @@
+<%- @book.identifiers.each do |identifier| -%>
+<dc:identifier<%- if identifier.scheme -%> opf:scheme="<%= identifier.scheme %>"<%- end -%>><%= identifier.identifier %></dc:identifier>
+<%- end -%>
+<%- if @book.lang -%>
+<dc:language><%= @book.lang %></dc:language>
+<%- end -%>
+<dc:title opf:type="main"><%= @book.title %></dc:title>
+<%- if @book.subtitle -%>
+<dc:title opf:type="subtitle"><%= @book.subtitle %></dc:title>
+<%- end -%>
+<%- if @book.short -%>
+<dc:title opf:type="short"><%= @book.short %></dc:title>
+<%- end -%>
+<%- if @book.collection -%>
+<dc:title opf:type="collection"><%= @book.collection %></dc:title>
+<%- end -%>
+<%- if @book.edition -%>
+<dc:title opf:type="edition"><%= @book.edition %></dc:title>
+<%- end -%>
+<%- if @book.extended -%>
+<dc:title opf:type="extended"><%= @book.extended %></dc:title>
+<%- end -%>
+<%- if @book.publisher -%>
+<dc:publisher><%= @book.publisher %></dc:publisher>
+<%- end -%>
+<%- @book.creators.each do |c| -%>
+<dc:creator<%- if c.role -%> opf:role="<%= c.role %>"<%- end -%>><%= c.name %></dc:creator>
+<%- end -%>
+<%- @book.contributors.each do |c| -%>
+<dc:contributor<%- if c.role -%> opf:role="<%= c.role %>"<%- end -%>><%= c.name %></dc:contributor>
+<%- end -%>
+<%- if @book.description -%>
+<dc:description><%= @book.description %></dc:description>
+<%- end -%>
+<%- if @book.rights -%>
+<dc:rights><%= @book.rights %></dc:rights>
+<%- end -%>
+<%- if @book.publication -%>
+<dc:date><%= Time.parse(@book.publication).utc.iso8601 %></dc:date>
+<%- end -%>
+<%- if @book.modification -%>
+<meta property="dcterms:modified"><%= Time.parse(@book.modification).utc.iso8601 %></meta>
+<%- end -%>

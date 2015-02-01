@@ -1,0 +1,376 @@
+\documentclass[$if(fontsize)$$fontsize$,$endif$$if(lang)$$lang$,$endif$$if(papersize)$$papersize$,$endif$$for(classoption)$$classoption$$sep$,$endfor$]{$documentclass$}
+
+%
+% macro ルビ usage: \ruby{漢}{かん}\ruby{字}{じ}
+%
+\def\ruby#1#2{%
+  \leavevmode
+  \setbox0=\hbox{#1}\setbox1=\hbox{\tiny#2}%
+  \ifdim\wd0>\wd1 \dimen0=\wd0 \else \dimen0=\wd1 \fi
+  \hbox{\kanjiskip=\fill
+    \vbox{\hbox to \dimen0{\tiny \hfil#2\hfil}%
+      \nointerlineskip
+      \hbox to \dimen0{\hfil#1\hfil}}}}
+
+% セクションの文字サイズ変更
+
+\makeatletter
+\renewcommand{\section}{\@startsection{section}{1}{\z@}%
+  {1\Cvs \@plus.5\Cvs \@minus.2\Cvs}%
+  {.5\Cvs \@plus.3\Cvs}%
+  {\reset@font\large\bfseries}}
+\makeatother
+
+% サブセクションの文字サイズ変更
+
+\makeatletter
+\renewcommand{\subsection}{\@startsection{subsection}{2}{\z@}%
+  {1\Cvs \@plus.5\Cvs \@minus.2\Cvs}%
+  {.5\Cvs \@plus.3\Cvs}%
+  {\reset@font\normalsize\bfseries}}
+\makeatother
+
+% chapterの文字サイズ変更
+
+\makeatletter
+\renewcommand{\chapter}{%
+  \if@openright\cleardoublepage\else\clearpage\fi
+  \thispagestyle{jpl@in}%
+  \global\@topnum\z@
+  \@afterindenttrue
+  \secdef\@chapter\@schapter}
+\def\@chapter[#1]#2{%
+  \ifnum \c@secnumdepth >\m@ne
+  \if@mainmatter
+  \refstepcounter{chapter}%
+  \typeout{\@chapapp\space\thechapter\space\@chappos}%
+  \addcontentsline{toc}{chapter}%
+                  {\protect\numberline{\@chapapp\thechapter\@chappos}#1}%
+                  \else\addcontentsline{toc}{chapter}{#1}\fi
+                  \else
+                  \addcontentsline{toc}{chapter}{#1}%
+                  \fi
+                  \chaptermark{#1}%
+                  \addtocontents{lof}{\protect\addvspace{10\p@}}%
+                  \addtocontents{lot}{\protect\addvspace{10\p@}}%
+                  \@makechapterhead{#2}\@afterheading}
+\def\@makechapterhead#1{\hbox{}%
+  \vskip0\Cvs
+      {\parindent\z@
+        \raggedright
+        \reset@font\large\bfseries
+        \leavevmode
+        \ifnum \c@secnumdepth >\m@ne
+        \setlength\@tempdima{\linewidth}%
+        \if@mainmatter
+        \setbox\z@\hbox{\@chapapp\thechapter\@chappos\hskip1zw}%
+        \addtolength\@tempdima{-\wd\z@}%
+        \unhbox\z@\nobreak
+        \fi
+        \vtop{\hsize\@tempdima#1}%
+        \else
+        #1\relax
+        \fi}\nobreak\vskip0.1\Cvs}
+\def\@schapter#1{%
+  \@makeschapterhead{#1}\@afterheading
+}
+\def\@makeschapterhead#1{\hbox{}%
+  \vskip0.1\Cvs
+      {\parindent\z@
+        \raggedright
+        \reset@font\large\bfseries
+        \leavevmode
+        \setlength\@tempdima{\linewidth}%
+        \vtop{\hsize\@tempdima#1}}\vskip0.1\Cvs}
+\makeatother
+
+% ２カラムの幅
+\iftdir
+  \makeatletter 
+  \if@stysize
+    \setlength\columnsep{1\Cwd}
+  \else
+    \setlength\columnsep{10\p@}
+  \fi
+  \makeatother
+  \addtolength\textwidth{0.4in}
+\fi
+\addtolength\topmargin{-0.4in}
+
+% フォントの多様化
+\usepackage[uplatex,deluxe]{otf}
+
+$if(fontfamily)$
+\usepackage{$fontfamily$}
+$else$
+\usepackage{lmodern}
+$endif$
+$if(linestretch)$
+\usepackage{setspace}
+\setstretch{$linestretch$}
+$endif$
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+$if(euro)$
+  \usepackage{eurosym}
+$endif$
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+    \usepackage{xltxtra,xunicode}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Mapping=tex-text,Scale=MatchLowercase}
+  \newcommand{\euro}{€}
+$if(mainfont)$
+    \setmainfont{$mainfont$}
+$endif$
+$if(sansfont)$
+    \setsansfont{$sansfont$}
+$endif$
+$if(monofont)$
+    \setmonofont[Mapping=tex-ansi]{$monofont$}
+$endif$
+$if(mathfont)$
+    \setmathfont(Digits,Latin,Greek){$mathfont$}
+$endif$
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+$if(geometry)$
+\usepackage[$for(geometry)$$geometry$$sep$,$endfor$]{geometry}
+$endif$
+$if(lang)$
+\ifxetex
+  \usepackage{polyglossia}
+  \setmainlanguage{$mainlang$}
+\else
+  \usepackage[shorthands=off,$lang$]{babel}
+\fi
+$endif$
+$if(natbib)$
+\usepackage{natbib}
+\bibliographystyle{$if(biblio-style)$$biblio-style$$else$plainnat$endif$}
+$endif$
+$if(biblatex)$
+\usepackage{biblatex}
+$if(biblio-files)$
+\bibliography{$biblio-files$}
+$endif$
+$endif$
+$if(listings)$
+\usepackage{listings}
+$endif$
+$if(lhs)$
+\lstnewenvironment{code}{\lstset{language=Haskell,basicstyle=\small\ttfamily}}{}
+$endif$
+$if(highlighting-macros)$
+$highlighting-macros$
+$endif$
+$if(verbatim-in-note)$
+\usepackage{fancyvrb}
+\VerbatimFootnotes
+$endif$
+$if(tables)$
+\usepackage{longtable,booktabs}
+$endif$
+\usepackage{plext}
+\usepackage[dvipdfmx]{graphicx}
+\usepackage[dvipdfmx]{color}
+
+% 画像サイズを置き換え
+\let\Oldincludegraphics\includegraphics
+\makeatletter
+\if@twocolumn\renewcommand{\includegraphics}[2][totalheight=0.5\textheight]{\ifydir\Oldincludegraphics[width=0.45\textwidth,#1]{#2}\else\Oldincludegraphics[angle=90,width=0.5\textwidth,#1]{#2}\fi}
+\else\renewcommand{\includegraphics}[2][totalheight=\textheight]{\ifydir\Oldincludegraphics[width=1\textwidth,#1]{#2}\else\Oldincludegraphics[angle=90,width=\textwidth,#1]{#2}\fi}\fi
+\makeatother
+
+% カラム切り替えのタイミングで画像のサイズも調整する
+\let\Oldtwocolumn\twocolumn
+\let\Oldonecolumn\onecolumn
+\makeatletter
+\def\twocolumn{\Oldtwocolumn\renewcommand{\includegraphics}[2][totalheight=0.5\textheight]{\ifydir\Oldincludegraphics[width=0.45\textwidth,##1]{##2}\else\Oldincludegraphics[angle=90,width=0.5\textwidth,##1]{##2}\fi}}
+\def\onecolumn{\Oldonecolumn\renewcommand{\includegraphics}[2][totalheight=\textheight]{\ifydir\Oldincludegraphics[width=1\textwidth,##1]{##2}\else\Oldincludegraphics[angle=90,width=\textwidth,##1]{##2}\fi}}
+\makeatother
+
+% 目次 ?
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\ifxetex
+  \usepackage[setpagesize=false, % page size defined by xetex
+              unicode=false, % unicode breaks when used with xetex
+              xetex]{hyperref}
+\else
+  \usepackage[unicode=true]{hyperref}
+\fi
+\hypersetup{breaklinks=true,
+            bookmarks=true,
+            pdfauthor={$author-meta$},
+            pdftitle={$title-meta$},
+            colorlinks=false,
+            citecolor=$if(citecolor)$$citecolor$$else$blue$endif$,
+            urlcolor=$if(urlcolor)$$urlcolor$$else$blue$endif$,
+            linkcolor=$if(linkcolor)$$linkcolor$$else$black$endif$,
+            pdfborder={0 0 0}}
+\urlstyle{same}  % don't use monospace font for urls
+
+\makeatletter
+\def\contentsline#1#2#3#4{%
+  \begingroup
+  \Hy@safe@activestrue
+  \edef\x{\endgroup
+    \def\noexpand\Hy@tocdestname{#4}%
+  }\x
+  \ifx\Hy@tocdestname\ltx@empty
+  \csname l@#1\endcsname{#2}{#3}%
+  \else
+  \ifcase\Hy@linktoc % none
+  \csname l@#1\endcsname{#2}{#3}%
+  \or % section
+  \csname l@#1\endcsname{%
+   \hyper@linkstart{link}{\Hy@tocdestname}{#2}\hyper@linkend
+  }{\pbox<y>{#3}}%
+  \or % page
+  \def\Hy@temp{#3}%
+  \ifx\Hy@temp\ltx@empty
+  \csname l@#1\endcsname{#2}{#3}%
+  \else
+  \csname l@#1\endcsname{{#2}}{%
+    \hyper@linkstart{link}{\Hy@tocdestname}{#3}\hyper@linkend
+  }%
+  \fi
+  \else % all
+  \def\Hy@temp{#3}%
+  \ifx\Hy@temp\ltx@empty
+  \csname l@#1\endcsname{%
+    \hyper@linkstart{link}{\Hy@tocdestname}{#2}\hyper@linkend
+  }{}%
+  \else
+  \csname l@#1\endcsname{%
+    \hyper@linkstart{link}{\Hy@tocdestname}{#2}\hyper@linkend
+  }{%
+    \hyper@linkstart{link}{\Hy@tocdestname}{#3}\hyper@linkend
+  }%
+  \fi
+  \fi
+  \fi
+  \vspace{-5mm}
+}
+\makeatother
+
+$if(links-as-notes)$
+% Make links footnotes instead of hotlinks:
+\renewcommand{\href}[2]{#2\footnote{\url{#1}}}
+$endif$
+$if(strikeout)$
+\usepackage[normalem]{ulem}
+% avoid problems with \sout in headers with hyperref:
+\pdfstringdefDisableCommands{\renewcommand{\sout}{}}
+$endif$
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+$if(numbersections)$
+\setcounter{secnumdepth}{5}
+$else$
+\setcounter{secnumdepth}{0}
+$endif$
+$if(verbatim-in-note)$
+\VerbatimFootnotes % allows verbatim text in footnotes
+$endif$
+
+% タイトル
+$if(title)$
+\title{$title$$if(subtitle)$\\\vspace{0.5em}{\large $subtitle$}$endif$}
+$endif$
+$if(author)$
+\author{$for(author)$$author$$sep$ \and $endfor$}
+$endif$
+\date{$date$}
+$for(header-includes)$
+$header-includes$
+$endfor$
+
+% 章の名前付け
+$if(prepartname)$
+\renewcommand{\prepartname}{$prepartname$}
+$endif$
+$if(postpartname)$
+\renewcommand{\postpartname}{$postpartname$}
+$endif$
+$if(prechaptername)$
+\renewcommand{\prechaptername}{$prechaptername$}
+$endif$
+$if(postchaptername)$
+\renewcommand{\postchaptername}{$postchaptername$}
+$endif$
+
+
+\begin{document}
+
+\include{$book_name$.before_body}
+
+$if(title)$
+\maketitle
+$endif$
+
+%\typeout{<<<}
+%\typeout{paperheight:\the\paperheight}
+
+$for(include-before)$
+$include-before$
+
+$endfor$
+$if(toc)$
+{
+%\hypersetup{linkcolor=black}
+\setcounter{tocdepth}{1}%$toc-depth$}
+\tableofcontents
+}
+$endif$
+$if(lot)$
+\listoftables
+$endif$
+$if(lof)$
+\listoffigures
+$endif$
+
+$body$
+
+$if(natbib)$
+$if(biblio-files)$
+$if(biblio-title)$
+$if(book-class)$
+\renewcommand\bibname{$biblio-title$}
+$else$
+\renewcommand\refname{$biblio-title$}
+$endif$
+$endif$
+\bibliography{$biblio-files$}
+
+$endif$
+$endif$
+$if(biblatex)$
+\printbibliography$if(biblio-title)$[title=$biblio-title$]$endif$
+
+$endif$
+
+$for(include-after)$
+$include-after$
+
+$endfor$
+
+\include{$book_name$.after_body}
+
+\end{document}
