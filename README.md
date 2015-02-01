@@ -165,4 +165,3 @@ $ sudo ln -fs "/Library/Fonts/ヒラギノ角ゴ Std W8.otf" ./HiraKakuStd-W8.ot
 $ sudo mktexlsr
 $ sudo updmap-sys --setoption kanjiEmbed hiragino
 ```
-
