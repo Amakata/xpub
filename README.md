@@ -211,11 +211,15 @@ end
 
 EPUB出力では下記のオプションが与えられた物として動作します。 
 
-```markdown_phpextra+hard_line_breaks+raw_html```
+```
+markdown_phpextra+hard_line_breaks+raw_html
+```
 
 PDF出力では下記のオプションが与えられた物として動作します。 
 
-```markdown_phpextra+hard_line_breaks+raw_tex```
+```
+markdown_phpextra+hard_line_breaks+raw_tex
+```
 
 ## ルビ
 
