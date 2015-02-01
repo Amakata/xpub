@@ -13,24 +13,19 @@ PDFやEPUB3の生成を自動化します。
 
 ## Installation
 
-動作確認はMacでしています。それ以外の環境については把握していません。
+動作確認はMacでしています。それ以外の環境については把握していませんがおそらくLinuxでも利用できると思います。
 
-```ruby
-gem 'xpub'
+
+```
+$ gem install xpub
 ```
 
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install xpub
+でインストールします。
 
 このツールを使うには他にPandocとLatexが必要です。
 
 
-### Tex Live
+### TeX Live
 
 #### MacTex.pkgをダウンロードしてインストール
 
@@ -38,11 +33,11 @@ http://tug.org/mactex/
 
 参考) http://tandoori.hatenablog.com/entry/20130802/1375451791
 
-#### Tex Live Utility.appを起動して、アップデート
+#### TeX Live Utility.appを起動して、アップデート
 
 ```
-Yosemiteを使う場合は、まずTex Live Utilityを更新すること、メニューの「Tex Liveユーティリティ > 更新があるか確認」で更新すること。
-そうしないとうまくTexをアップデートできない
+Yosemiteを使う場合は、まずTeX Live Utilityを更新すること、メニューの「TeX Liveユーティリティ > 更新があるか確認」で更新すること。
+そうしないとうまくTeXをアップデートできない
 ```
 
 または
@@ -136,7 +131,7 @@ $ xpub clean
 
 # メモ
 
-## MacでのTexのフォントの設定メモ
+## MacでのTeXのフォントの設定メモ
 
 ### 游明朝体・游ゴシック体
 
@@ -165,4 +160,3 @@ $ sudo ln -fs "/Library/Fonts/ヒラギノ角ゴ Std W8.otf" ./HiraKakuStd-W8.ot
 $ sudo mktexlsr
 $ sudo updmap-sys --setoption kanjiEmbed hiragino
 ```
-
