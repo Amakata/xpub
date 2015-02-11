@@ -24,23 +24,9 @@ module Xpub
    end
 
    class CallImgPageLatexOp < CallLatexOp
-    def initialize name, book, builder
-     @topoffset = "0in"
-     @leftoffset = "0in"
-     super name, book, builder
-    end
-
-    def topoffset param
-     @topoffset = param
-    end
-
-    def leftoffset param
-     @leftoffset = param
-    end
-
-    def file param
-     @file = param
-    end
+    dsl_accessor :topoffset, :instance=>true, :default => "0in"
+    dsl_accessor :leftoffset, :instance=>true, :default => "0in"
+    dsl_accessor :file, :instance=>true
 
     def latex book, builder
      <<"EOS"
@@ -49,34 +35,23 @@ module Xpub
 \\vspace*{-1truein}
 \\vspace*{-\\hoffset}
 \\vspace*{-\\oddsidemargin}
-\\vspace*{#{@leftoffset}}
-\\noindent\\hspace*{-1in}\\hspace*{-\\voffset}\\hspace*{-\\topmargin}\\hspace*{-\\headheight}\\hspace*{-\\headsep}\\hspace*{#{@topoffset}}
-\\includegraphics[width=\\paperheight,height=\\paperwidth]{#{@file}}
+\\vspace*{#{leftoffset}}
+\\noindent\\hspace*{-1in}\\hspace*{-\\voffset}\\hspace*{-\\topmargin}\\hspace*{-\\headheight}\\hspace*{-\\headsep}\\hspace*{#{topoffset}}
+\\includegraphics[width=\\paperheight,height=\\paperwidth]{#{file}}
 \\clearpage\n
 EOS
     end
    end
 
    class CallEmptyPageLatexOp < CallLatexOp
-    def initialize name, book, builder
-     @no_page_number = false
-     super name, book, builder
-    end
-
-    def no_page_number
-     @no_page_number = true
-    end
+    dsl_accessor :no_page_number, :instance=>true, :default => false
 
     def latex book, builder
-     (@no_page_number ? "\\thispagestyle{empty}" : "")  + "　\\clearpage\n"
+     (no_page_number ? "\\thispagestyle{empty}" : "")  + "　\\clearpage\n"
     end
    end
 
    class CallInnerTitlePageLatexOp < CallLatexOp
-    def initialize name, book, builder
-     super name, book, builder
-    end
-
     def latex book, builder
      <<"EOS"
 \\makeatletter

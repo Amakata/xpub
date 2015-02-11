@@ -1,4 +1,4 @@
-#!/usr/bin/env ruby
+1;2c#!/usr/bin/env ruby
 
 require 'bundler/setup'
 
@@ -10,6 +10,8 @@ require 'pathname'
 require 'shellwords'
 require 'erb'
 require 'time'
+require 'singleton'
+require 'dsl_accessor'
 
 require 'xpub/version.rb'
 
@@ -21,10 +23,13 @@ opt = OptionParser.new do |opt|
  opt.on_head('[cmd]',
              '    init    Xpubファイルの生成',
              '    build   ビルド',
-             '    clean   テンポラリフォルダと出力フォルダをクリア')
+             '    clean   テンポラリフォルダと出力フォルダをクリア',
+             '    check   ソースコードを検証'
+             )
  opt.on('-v', '出力を詳細にする') { |v| option[:v] = v }
  opt.on('--book=VALUE', 'ビルドするbookを指定する') { |v| option[:book] = v }
  opt.on('--builder=VALUE', 'ビルドするbuilderを指定する') { |v| option[:builder] = v }
+ opt.on('--checker=VALUE', 'チェックするcheckerを指定する') { |v| option[:checker = v }
  opt.on('--pandoc-json-output', 'ビルド時にpandocのjsonを出力') { |v| option['pandoc-json-output'] = v }
  opt.permute!(ARGV)
 end
@@ -43,6 +48,7 @@ require "xpub/dsl/book"
 require "xpub/dsl/src_file"
 require "xpub/dsl/builder"
 require "xpub/dsl/page"
+require "xpub/dsl/checker"
 
 if File.file?("#{curDir}/Xpub") && ARGV[0] != "init"
  load "#{curDir}/Xpub"
@@ -67,6 +73,9 @@ elsif ARGV[0] == "init"
  end
  puts "init...".color :green
  FileUtils.cp_r(Dir.glob(File.dirname(__FILE__) + "/../skel/*"),"./")
+elsif ARGV[0] == "check"
+ puts "check...".color :green
+ Xpub::BookManager.instance.check option
 else
  puts opt.help
  exit
