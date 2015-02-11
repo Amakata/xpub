@@ -33,7 +33,6 @@ module Xpub
       }
      end
     end
-
    end
   end
 

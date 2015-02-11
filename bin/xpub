@@ -1,4 +1,4 @@
-#!/usr/bin/env ruby
+1;2c#!/usr/bin/env ruby
 
 require 'bundler/setup'
 
@@ -12,7 +12,6 @@ require 'erb'
 require 'time'
 require 'singleton'
 require 'dsl_accessor'
-require 'levenshtein'
 
 require 'xpub/version.rb'
 
