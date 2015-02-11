@@ -1,136 +1,32 @@
-require 'singleton'
-
 module Xpub
  class CallBook
   attr_reader :name, :src_files, :resource_files, :creators, :contributors, :identifiers
 
+  dsl_accessor :title, :instance=>true, :default => "UNTITLED"
+  dsl_accessor :subtitle, :instance=>true
+  dsl_accessor :short, :instance=>true
+  dsl_accessor :collection, :instance=>true
+  dsl_accessor :edition, :instance=>true
+  dsl_accessor :extended, :instance=>true
+  dsl_accessor :publisher, :instance=>true
+  dsl_accessor :rights, :instance=>true
+  dsl_accessor :publication, :instance=>true
+  dsl_accessor :modification, :instance=>true
+  dsl_accessor :lang, :instance=>true, :default => "ja"
+  dsl_accessor :description, :instance=>true
+
   def initialize name
    @name = name
-   @title = "UNTITLED"
-   @subtitle = nil
-   @short = nil
-   @collection = nil
-   @edition = nil
-   @extended = nil
-   @publisher = nil
-   @rights = nil
-   @publication = nil
-   @modification = nil
-   @lang = "ja"
    @creators = []
    @contributors = []
    @identifiers = []
-   @description = nil
-
    @src_files = []
    @resource_files = []
    @builders = []
+   @checkers = []
   end
-
 
   def validate
-  end
-
-  def _set_or_get values
-   # 引数が 2 つ以上ならエラー
-   raise ArgumentError, "wrong number of arguments (#{ values.length} for 0..1)" if values.length > 1
-   values.empty?
-  end
-
-  def title *values
-   if _set_or_get values
-    @title
-   else
-    @title = values[0]
-   end
-  end
-
-  def subtitle *values
-   if _set_or_get values
-    @subtitle
-   else
-    @subtitle = values[0]
-   end
-  end
-
-  def short *values
-   if _set_or_get values
-    @short
-   else
-    @short = values[0]
-   end
-  end
-
-  def collection *values
-   if _set_or_get values
-    @collection
-   else
-    @collection = values[0]
-   end
-  end
-
-  def edition *values
-   if _set_or_get values
-    @edition
-   else
-    @edition = values[0]
-   end
-  end
-
-  def extended *values
-   if _set_or_get values
-    @extended
-   else
-    @extended = values[0]
-   end
-  end
-
-  def publisher *values
-   if _set_or_get values
-    @publisher
-   else
-    @publisher = values[0]
-   end
-  end
-
-  def rights *values
-   if _set_or_get values
-    @rights
-   else
-    @rights = values[0]
-   end
-  end
-
-  def publication *values
-   if _set_or_get values
-    @publication
-   else
-    @publication = values[0]
-   end
-  end
-
-  def modification *values
-   if _set_or_get values
-    @modification
-   else
-    @modification = values[0]
-   end
-  end
-
-  def lang *values
-   if _set_or_get values
-    @lang
-   else
-    @lang = values[0]
-   end
-  end
-
-  def description *values
-   if _set_or_get values
-    @description
-   else
-    @description = values[0]
-   end
   end
 
   def build option
@@ -142,29 +38,24 @@ module Xpub
    }
   end
 
+  def check option
+   puts "check #{@name} book.".color :green
+   @checkers.each { |c| 
+    if !option[:checker] || option[:checker] == c.name
+     c.check option
+    end
+   }
+  end
+
   class CallAuthor
    attr_reader :name
+   dsl_accessor :role, :instance=>true
 
    def initialize name
     @name = name
-    @role = nil
    end
 
    def validate
-   end
-
-   def _set_or_get values
-    # 引数が 2 つ以上ならエラー
-    raise ArgumentError, "wrong number of arguments (#{ values.length} for 0..1)" if values.length > 1
-    values.empty?
-   end
-
-   def role *values
-    if _set_or_get values
-     @role
-    else
-     @role = values[0]
-    end
    end
   end
 
@@ -188,36 +79,14 @@ module Xpub
 
   class CallIdentifier
    attr_reader :identifier
+   dsl_accessor :scheme, :instance=>true
+   dsl_accessor :type_value, :instance=>true
 
    def initialize identifier
     @identifier = identifier
-    @scheme = nil
-    @type_value = nil
    end
 
    def validate
-   end
-
-   def _set_or_get values
-    # 引数が 2 つ以上ならエラー
-    raise ArgumentError, "wrong number of arguments (#{ values.length} for 0..1)" if values.length > 1
-    values.empty?
-   end
-
-   def scheme *values
-    if _set_or_get values
-     @scheme
-    else
-     @scheme = values[0]
-    end
-   end
-
-   def type_value *values
-    if _set_or_get values
-     @type_value
-    else
-     @type_value = values[0]
-    end
    end
   end
 
@@ -246,14 +115,22 @@ module Xpub
    @books = []
   end
 
-  def add c
-   @books << c
+  def add b
+   @books << b
   end
 
   def build option
    @books.each { |book|
     if !option[:book] || option[:book] == book.name
      book.build option
+    end
+   }
+  end
+
+  def check option
+   @books.each { |book|
+    if !option[:book] || option[:book] == book.name
+     book.check option
     end
    }
   end

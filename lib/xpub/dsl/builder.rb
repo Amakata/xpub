@@ -1,20 +1,13 @@
 module Xpub
  class CallBook
   class CallBuilder
-   attr_reader :name, :theme, :output
+   attr_reader :name
+   dsl_accessor :theme, :instance=>true, :default => "default"
+   dsl_accessor :output, :instance=>true
 
    def initialize name, book
     @name = name
     @book = book
-    @theme = "default"
-   end
-
-   def output output
-    @output = output
-   end
-
-   def theme theme
-    @theme = theme
    end
 
    def build
@@ -52,7 +45,6 @@ module Xpub
    end
 
    def cmd_exec cmd, args, option
-
     cmd_line = cmd + " " + args.map { |arg|
      Shellwords.shellescape(arg)
     }.join(" ")
@@ -70,49 +62,26 @@ module Xpub
   end
 
   class CallEpubBuilder < CallBuilder
+   dsl_accessor :template, :instance=>true, :default => "template.html"
+   dsl_accessor :filter, :instance=>true, :default => "pandoc-filter.rb"
+   dsl_accessor :stylesheet, :instance=>true, :default => "epub.css"
+   dsl_accessor :metadata, :instance=>true, :default => "metadata.dat"
+   dsl_accessor :page_progression_direction, :instance=>true, :default => "rtl"
+   dsl_accessor :cover_image, :instance=>true
+   dsl_accessor :pandoc_cmd, :instance=>true, :default => "pandoc"
+
    def initialize name, book
     @vars = []
     @meta = []
-    @template = "template.html"
-    @filter = "pandoc-filter.rb"
-    @stylesheet = "epub.css"
-    @metadata = "metadata.dat"
-    @page_progression_direction = "rtl"
-    @cover_image = nil
-
     if book.title != ""
      @vars << ["title", book.title]
     end
     super name, book
    end
 
-   def page_progression_direction param
-    @page_progression_direction = param
-   end
-
-   def template param
-    @template = param
-   end
-
-   def filter param
-    @filter = param
-   end
-
-   def stylesheet param
-    @stylesheet = param
-   end
-
-   def metadata param
-    @metadata = param
-   end
-
-   def cover_image param
-    @cover_image = param
-   end
-
    def meta_option
     result = []
-    @meta.concat([["page-progression-direction", @page_progression_direction]]).each { |m|
+    @meta.concat([["page-progression-direction", page_progression_direction]]).each { |m|
      result << "-M"
      result << "#{m[0]}=#{m[1]}"
     }
@@ -129,15 +98,15 @@ module Xpub
    end
 
    def template_option
-    "--template=#{Dir::getwd}/theme/#{@theme}/#{@name}/#{@template}"
+    "--template=#{Dir::getwd}/theme/#{theme}/#{@name}/#{template}"
    end
 
    def filter_option
-    "--filter=#{Dir::getwd}/theme/#{@theme}/#{@name}/#{@filter}"
+    "--filter=#{Dir::getwd}/theme/#{theme}/#{@name}/#{filter}"
    end
 
    def stylesheet_option
-    "--epub-stylesheet=#{Dir::getwd}/theme/#{@theme}/#{@name}/#{@stylesheet}"
+    "--epub-stylesheet=#{Dir::getwd}/theme/#{theme}/#{@name}/#{stylesheet}"
    end
 
    def metadata_option
@@ -145,11 +114,11 @@ module Xpub
    end
 
    def metadata_path
-    tmp_path("#{@book.name}.#{@metadata}")
+    tmp_path("#{@book.name}.#{metadata}")
    end
 
    def metadata_template_path
-    "#{Dir::getwd}/theme/#{@theme}/#{@name}/#{@metadata}.erb"
+    "#{Dir::getwd}/theme/#{theme}/#{@name}/#{metadata}.erb"
    end
 
    def epub_path
@@ -164,10 +133,6 @@ module Xpub
     copy_to_tmp files
    end
 
-   def pandoc_cmd
-    "pandoc"
-   end
-
    def pandoc_option option
     option = [
      "--epub-chapter-level=1",
@@ -180,8 +145,8 @@ module Xpub
      stylesheet_option,
      metadata_option
     ]
-    if @cover_image
-     option << "--epub-cover-image=" + src_path(@cover_image) 
+    if cover_image
+     option << "--epub-cover-image=" + src_path(cover_image) 
     end
     option
    end
@@ -208,12 +173,15 @@ module Xpub
   end
 
   class CallLatexBuilder < CallBuilder
-   attr_reader :template
+   dsl_accessor :template, :instance=>true, :default => "template.tex"
+   dsl_accessor :filter, :instance=>true, :default => "pandoc-filter.rb"
+   dsl_accessor :extractbb_cmd, :instance=>true, :default => "extractbb"
+   dsl_accessor :pandoc_cmd, :instance=>true, :default => "pandoc"
+   dsl_accessor :latex_cmd, :instance=>true, :default => "uplatex"
+   dsl_accessor :dvipdfm_cmd, :instance=>true, :default => "dvipdfmx"
 
    def initialize name, book
     @vars = []
-    @template = "template.tex"
-    @filter = "pandoc-filter.rb"
     @hyoushi = []
     @urahyoushi = []
     super name, book
@@ -243,13 +211,6 @@ module Xpub
     @vars << [:postchaptername, param]
    end
 
-   def template param
-    @template = param
-   end
-
-   def filter param
-    @filter = param
-   end
 
    def vars_option
     result = []
@@ -261,11 +222,11 @@ module Xpub
    end
 
    def template_option
-    "--template=#{Dir::getwd}/theme/#{@theme}/#{@name}/#{@template}"
+    "--template=#{Dir::getwd}/theme/#{theme}/#{@name}/#{template}"
    end
 
    def filter_option
-    "--filter=#{Dir::getwd}/theme/#{@theme}/#{@name}/#{@filter}"
+    "--filter=#{Dir::getwd}/theme/#{theme}/#{@name}/#{filter}"
    end
 
    def tex_path
@@ -281,15 +242,11 @@ module Xpub
    end
 
    def pdf_path
-    if @output
-     output_path(@output) + '.pdf'
+    if output
+     output_path(output) + '.pdf'
     else
      output_path(@book.name) + '.pdf'
     end
-   end
-
-   def extractbb_cmd
-    "extractbb"
    end
 
    def _build_resource files, option
@@ -306,10 +263,6 @@ module Xpub
     _build_resource @book.resource_files, option
    end
 
-   def pandoc_cmd
-    "pandoc"
-   end
-
    def pandoc_option option
     [
      "--chapters",
@@ -319,14 +272,6 @@ module Xpub
      template_option,
      filter_option
     ]
-   end
-
-   def latex_cmd
-    "uplatex"
-   end
-
-   def dvipdfm_cmd
-    "dvipdfmx"
    end
 
    def build option
@@ -352,6 +297,7 @@ module Xpub
     end
    end
   end
+
   def epub_builder name, &block
    call = CallEpubBuilder.new name, self
    if block
