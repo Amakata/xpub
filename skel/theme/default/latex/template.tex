@@ -198,6 +198,12 @@ $endif$
 \def\onecolumn{\Oldonecolumn\renewcommand{\includegraphics}[2][totalheight=\textheight]{\ifydir\Oldincludegraphics[width=1\textwidth,##1]{##2}\else\Oldincludegraphics[angle=90,width=\textwidth,##1]{##2}\fi}}
 \makeatother
 
+% 三点リーダー
+\let\Oldldots\ldots
+\makeatletter
+\def\ldots{…}
+\makeatother
+
 % 目次 ?
 \makeatletter
 \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
