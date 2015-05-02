@@ -61,7 +61,7 @@ module Xpub
 
    def img_files
     validate
-    Dir.glob("#{full_path}/**/*.{jpeg,jpg,png,bmp,pdf}").sort.map { |path| 
+    Dir.glob("#{full_path}/**/*.{jpeg,jpg,png,bmp,pdf}").sort.map { |path|
      img = CallImgFile.new path.sub(full_path + "/", "")
      img.validate
      img
@@ -88,8 +88,8 @@ module Xpub
 
    def md_files
     validate
-    Dir.glob("#{full_path}/**/*.md").sort.map { |path| 
-     mf = CallMdFile.new path.sub(full_path + "/", "")
+    Dir.glob("#{full_path}/**/*.md").sort.map { |path|
+     mf = CallMdFile.new path.sub("#{Dir::getwd}/src/", "")
      mf.validate
      mf
     }
