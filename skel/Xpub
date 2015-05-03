@@ -31,7 +31,7 @@ Xpub::book "sample" do
   latex_builder "latex" do
     documentclass "utbook"
     classoption "11pt"
-    classoption "twocolumn" 
+    classoption "twocolumn"
     classoption "twoside"
     classoption "a5j"
     # prepartname "第"
@@ -42,26 +42,26 @@ Xpub::book "sample" do
     # theme "default"
     # template "template.tex"
     # filter "pandoc-filter.rb"
-
+    
     hyoushi_image_page "h01" do
-	  file "sample1.jpg"
-	  topoffset "-0.8mm"
-	  leftoffset "2.1mm"
+      file "sample1.jpg"
+      topoffset "-0.8mm"
+      leftoffset "2.1mm"
     end
     hyoushi_empty_page "h02" do
-	  no_page_number
+      no_page_number true
     end
     hyoushi_inner_title_page "title"
     urahyoushi_empty_page "h03" do
-	  no_page_number
+      no_page_number true
     end
     urahyoushi_image_page "h04" do#
-	  file "sample1.jpg"
-	  topoffset "-0.8mm"
-	  leftoffset "-5mm"
+      file "sample1.jpg"
+      topoffset "-0.8mm"
+      leftoffset "-5mm"
     end
   end
-  
+
   epub_builder "epub" do
     cover_image "sample1.jpg"
   end
