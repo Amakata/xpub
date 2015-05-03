@@ -113,7 +113,7 @@ $ xpub book -v
 コマンドラインの実行結果を結果にかかわらず詳細に出力します。
 
 ```
-$ xpub book --pandoc-json-output 
+$ xpub book --pandoc-json-output
 ```
 
 pandocのjsonオブジェクトをtmpフォルダに生成します。デバック用です。
@@ -168,7 +168,7 @@ Xpub::book "sample" do
   latex_builder "latex" do
     documentclass "utbook"
     classoption "11pt"
-    classoption "twocolumn" 
+    classoption "twocolumn"
     classoption "twoside"
     classoption "a5j"
     # prepartname "第"
@@ -181,24 +181,24 @@ Xpub::book "sample" do
     # filter "pandoc-filter.rb"
 
     hyoushi_image_page "h01" do
-	  file "sample1.jpg"
-	  topoffset "-0.8mm"
-	  leftoffset "2.1mm"
+      file "sample1.jpg"
+      topoffset "-0.8mm"
+      leftoffset "2.1mm"
     end
     hyoushi_empty_page "h02" do
-	  no_page_number
+      no_page_number true
     end
     hyoushi_inner_title_page "title"
     urahyoushi_empty_page "h03" do
-	  no_page_number
+      no_page_number true
     end
     urahyoushi_image_page "h04" do#
-	  file "sample1.jpg"
-	  topoffset "-0.8mm"
-	  leftoffset "-5mm"
+      file "sample1.jpg"
+      topoffset "-0.8mm"
+      leftoffset "-5mm"
     end
   end
-  
+
   epub_builder "epub" do
     cover_image "sample1.jpg"
   end
@@ -209,13 +209,13 @@ end
 
 本ツールのMarkdownの形式は現在のところpandocの読み込み形式に従います。
 
-EPUB出力では下記のオプションが与えられた物として動作します。 
+EPUB出力では下記のオプションが与えられた物として動作します。
 
 ```
 markdown_phpextra+hard_line_breaks+raw_html
 ```
 
-PDF出力では下記のオプションが与えられた物として動作します。 
+PDF出力では下記のオプションが与えられた物として動作します。
 
 ```
 markdown_phpextra+hard_line_breaks+raw_tex
