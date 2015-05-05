@@ -2,6 +2,7 @@ module Xpub
  class CallBook
   class CallLatexBuilder
    class CallLatexOp
+
     def initialize name, book, builder
      @name = name
      @book = book
@@ -24,9 +25,9 @@ module Xpub
    end
 
    class CallImgPageLatexOp < CallLatexOp
-    dsl_accessor :topoffset, :instance=>true, :default => "0in"
-    dsl_accessor :leftoffset, :instance=>true, :default => "0in"
-    dsl_accessor :file, :instance=>true
+    dsl_accessor :topoffset, :default => "0in"
+    dsl_accessor :leftoffset, :default => "0in"
+    dsl_accessor :file
 
     def latex book, builder
      <<"EOS"
@@ -44,7 +45,7 @@ EOS
    end
 
    class CallEmptyPageLatexOp < CallLatexOp
-    dsl_accessor :no_page_number, :instance=>true, :default => false
+    dsl_accessor :no_page_number, :default => false
 
     def latex book, builder
      (no_page_number ? "\\thispagestyle{empty}" : "")  + "　\\clearpage\n"

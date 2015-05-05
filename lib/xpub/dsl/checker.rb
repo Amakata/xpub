@@ -1,6 +1,7 @@
 module Xpub
- class CallBook 
+ class CallBook
   class CallChecker
+   
    def initialize name, book
     @name = name
     @book = book
@@ -11,9 +12,9 @@ module Xpub
 
    def _check option, pattern
     words = {}
-    @book.src_files.each do |file| 
+    @book.src_files.each do |file|
      f = open file.full_path
-     f.each_with_index do |line, index| 
+     f.each_with_index do |line, index|
       line.match(pattern) do |md|
        if words[md[1]]
         words[md[1]] << { :file => file.file, :line => (index + 1) }
@@ -25,10 +26,10 @@ module Xpub
      f.close
     end
 
-    words.sort.each do |word, infos| 
+    words.sort.each do |word, infos|
      if word
       puts word.color :red
-      infos.each { |info| 
+      infos.each { |info|
        puts "  #{info[:file]}(#{info[:line]})"
       }
      end

@@ -2,8 +2,8 @@ module Xpub
  class CallBook
   class CallBuilder
    attr_reader :name
-   dsl_accessor :theme, :instance=>true, :default => "default"
-   dsl_accessor :output, :instance=>true
+   dsl_accessor :theme, :default => "default"
+   dsl_accessor :output
 
    def initialize name, book
     @name = name
@@ -33,7 +33,7 @@ module Xpub
    end
 
    def copy_to_tmp files
-    files.each { |file| 
+    files.each { |file|
      pn = Pathname.new tmp_path(file.file)
      FileUtils.mkdir_p(pn.dirname) unless FileTest.exist?(pn.dirname)
 
@@ -62,13 +62,13 @@ module Xpub
   end
 
   class CallEpubBuilder < CallBuilder
-   dsl_accessor :template, :instance=>true, :default => "template.html"
-   dsl_accessor :filter, :instance=>true, :default => "pandoc-filter.rb"
-   dsl_accessor :stylesheet, :instance=>true, :default => "epub.css"
-   dsl_accessor :metadata, :instance=>true, :default => "metadata.dat"
-   dsl_accessor :page_progression_direction, :instance=>true, :default => "rtl"
-   dsl_accessor :cover_image, :instance=>true
-   dsl_accessor :pandoc_cmd, :instance=>true, :default => "pandoc"
+   dsl_accessor :template, :default => "template.html"
+   dsl_accessor :filter, :default => "pandoc-filter.rb"
+   dsl_accessor :stylesheet, :default => "epub.css"
+   dsl_accessor :metadata, :default => "metadata.dat"
+   dsl_accessor :page_progression_direction, :default => "rtl"
+   dsl_accessor :cover_image
+   dsl_accessor :pandoc_cmd, :default => "pandoc"
 
    def initialize name, book
     @vars = []
@@ -146,7 +146,7 @@ module Xpub
      metadata_option
     ]
     if cover_image
-     option << "--epub-cover-image=" + src_path(cover_image) 
+     option << "--epub-cover-image=" + src_path(cover_image)
     end
     option
    end
@@ -173,12 +173,12 @@ module Xpub
   end
 
   class CallLatexBuilder < CallBuilder
-   dsl_accessor :template, :instance=>true, :default => "template.tex"
-   dsl_accessor :filter, :instance=>true, :default => "pandoc-filter.rb"
-   dsl_accessor :extractbb_cmd, :instance=>true, :default => "extractbb"
-   dsl_accessor :pandoc_cmd, :instance=>true, :default => "pandoc"
-   dsl_accessor :latex_cmd, :instance=>true, :default => "uplatex"
-   dsl_accessor :dvipdfm_cmd, :instance=>true, :default => "dvipdfmx"
+   dsl_accessor :template, :default => "template.tex"
+   dsl_accessor :filter, :default => "pandoc-filter.rb"
+   dsl_accessor :extractbb_cmd, :default => "extractbb"
+   dsl_accessor :pandoc_cmd, :default => "pandoc"
+   dsl_accessor :latex_cmd, :default => "uplatex"
+   dsl_accessor :dvipdfm_cmd, :default => "dvipdfmx"
 
    def initialize name, book
     @vars = []

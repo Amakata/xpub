@@ -2,18 +2,18 @@ module Xpub
  class CallBook
   attr_reader :name, :src_files, :resource_files, :creators, :contributors, :identifiers
 
-  dsl_accessor :title, :instance=>true, :default => "UNTITLED"
-  dsl_accessor :subtitle, :instance=>true
-  dsl_accessor :short, :instance=>true
-  dsl_accessor :collection, :instance=>true
-  dsl_accessor :edition, :instance=>true
-  dsl_accessor :extended, :instance=>true
-  dsl_accessor :publisher, :instance=>true
-  dsl_accessor :rights, :instance=>true
-  dsl_accessor :publication, :instance=>true
-  dsl_accessor :modification, :instance=>true
-  dsl_accessor :lang, :instance=>true, :default => "ja"
-  dsl_accessor :description, :instance=>true
+  dsl_accessor :title, :default => "UNTITLED"
+  dsl_accessor :subtitle
+  dsl_accessor :short
+  dsl_accessor :collection
+  dsl_accessor :edition
+  dsl_accessor :extended
+  dsl_accessor :publisher
+  dsl_accessor :rights
+  dsl_accessor :publication
+  dsl_accessor :modification
+  dsl_accessor :lang, :default => "ja"
+  dsl_accessor :description
 
   def initialize name
    @name = name
@@ -31,7 +31,7 @@ module Xpub
 
   def build option
    puts "build #{@name} book.".color :green
-   @builders.each { |b| 
+   @builders.each { |b|
     if !option[:builder] || option[:builder] == b.name
      b.build option
     end
@@ -40,7 +40,7 @@ module Xpub
 
   def check option
    puts "check #{@name} book.".color :green
-   @checkers.each { |c| 
+   @checkers.each { |c|
     if !option[:checker] || option[:checker] == c.name
      c.check option
     end
@@ -49,7 +49,7 @@ module Xpub
 
   class CallAuthor
    attr_reader :name
-   dsl_accessor :role, :instance=>true
+   dsl_accessor :role
 
    def initialize name
     @name = name
@@ -79,8 +79,8 @@ module Xpub
 
   class CallIdentifier
    attr_reader :identifier
-   dsl_accessor :scheme, :instance=>true
-   dsl_accessor :type_value, :instance=>true
+   dsl_accessor :scheme
+   dsl_accessor :type_value
 
    def initialize identifier
     @identifier = identifier
