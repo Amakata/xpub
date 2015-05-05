@@ -22,5 +22,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rake", "~> 10.0"
 
   spec.add_dependency 'rainbow', '~> 2.0.0'
-  spec.add_dependency 'dsl_accessor', '~> 0.4.4'
+  spec.add_dependency 'levenshtein','~> 0.2.2'
 end
