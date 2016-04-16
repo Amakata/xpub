@@ -245,7 +245,7 @@ module Xpub
         files.each do |file|
           xbb = File.dirname(tmp_path(file.file)) + '/' + File.basename(tmp_path(file.file), '.*') + '.xbb'
           unless FileTest.exist?(xbb) && File.mtime(tmp_path(file.file)) <= File.mtime(xbb)
-            cmd_exec extractbb_cmd, [tmp_path(file.file)], option
+            cmd_exec "cd #{Shellwords.shellescape(File.dirname(tmp_path(file.file)))};#{extractbb_cmd}", [File.basename(file.file)], option
           end
         end
       end
