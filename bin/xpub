@@ -3,7 +3,7 @@
 require 'bundler/setup'
 
 require 'rainbow/ext/string'
-require "open3"
+require 'open3'
 require 'optparse'
 require 'fileutils'
 require 'pathname'
@@ -15,69 +15,66 @@ require 'levenshtein'
 
 require 'xpub/version.rb'
 
-option={}
-opt = OptionParser.new do |opt|
- opt.version = Xpub::VERSION
- opt.summary_indent = ' ' * 4
- opt.banner = 'Usage: xpub [cmd] [options]'
- opt.on_head('[cmd]',
-             '    init    Xpubファイルの生成',
-             '    build   ビルド',
-             '    clean   テンポラリフォルダと出力フォルダをクリア',
-             '    check   ソースコードを検証'
-             )
- opt.on('-v', '出力を詳細にする') { |v| option[:v] = v }
- opt.on('--book=VALUE', 'ビルドするbookを指定する') { |v| option[:book] = v }
- opt.on('--builder=VALUE', 'ビルドするbuilderを指定する') { |v| option[:builder] = v }
- opt.on('--checker=VALUE', 'チェックするcheckerを指定する') { |v| option[:checker] = v }
- opt.on('--pandoc-json-output', 'ビルド時にpandocのjsonを出力') { |v| option['pandoc-json-output'] = v }
- opt.permute!(ARGV)
+option = {}
+opt = OptionParser.new do |o|
+  o.version = Xpub::VERSION
+  o.summary_indent = ' ' * 4
+  o.banner = 'Usage: xpub [cmd] [options]'
+  o.on_head('[cmd]',
+            '    init    Xpubファイルの生成',
+            '    build   ビルド',
+            '    clean   テンポラリフォルダと出力フォルダをクリア',
+            '    check   ソースコードを検証')
+  o.on('-v', '出力を詳細にする') { |v| option[:v] = v }
+  o.on('--book=VALUE', 'ビルドするbookを指定する') { |v| option[:book] = v }
+  o.on('--builder=VALUE', 'ビルドするbuilderを指定する') { |v| option[:builder] = v }
+  o.on('--checker=VALUE', 'チェックするcheckerを指定する') { |v| option[:checker] = v }
+  o.on('--pandoc-json-output', 'ビルド時にpandocのjsonを出力') { |v| option['pandoc-json-output'] = v }
+  o.permute!(ARGV)
 end
 
-curDir = Dir::getwd
+cur_dir = Dir.getwd
 
-unless File.file?("#{curDir}/Xpub") || ARGV[0] == "init"
- puts "File does not exist. #{curDir}/Xpub".color :red
- exit
+unless File.file?("#{cur_dir}/Xpub") || ARGV[0] == 'init'
+  puts "File does not exist. #{cur_dir}/Xpub".color :red
+  exit
 end
 
-$:.unshift "#{curDir}/lib"
-$:.unshift File.dirname(__FILE__) + "/../lib"
+$:.unshift "#{cur_dir}/lib"
+$:.unshift File.dirname(__FILE__) + '/../lib'
 
-require "xpub/dsl_accessor"
-require "xpub/dsl/book"
-require "xpub/dsl/src_file"
-require "xpub/dsl/builder"
-require "xpub/dsl/page"
-require "xpub/dsl/checker"
+require 'xpub/dsl_accessor'
+require 'xpub/dsl/book'
+require 'xpub/dsl/src_file'
+require 'xpub/dsl/builder'
+require 'xpub/dsl/page'
+require 'xpub/dsl/checker'
 
-if File.file?("#{curDir}/Xpub") && ARGV[0] != "init"
- load "#{curDir}/Xpub"
-end
+load "#{cur_dir}/Xpub" if File.file?("#{cur_dir}/Xpub") && ARGV[0] != 'init'
 
 if ARGV.length != 1
- puts opt.help
- exit
-elsif ARGV[0] == "build"
- puts "build...".color :green
- Xpub::BookManager.instance.build option
-elsif ARGV[0] == "clean"
- puts "clean...".color :green
- FileUtils.remove_entry_secure("#{curDir}/tmp")
- Dir::mkdir("#{curDir}/tmp")
- FileUtils.remove_entry_secure("#{curDir}/output")
- Dir::mkdir("#{curDir}/output")
-elsif ARGV[0] == "init"
- if File.file?("#{curDir}/Xpub")
-  puts "File exist. #{curDir}/Xpub".color :red
+  puts opt.help
   exit
- end
- puts "init...".color :green
- FileUtils.cp_r(Dir.glob(File.dirname(__FILE__) + "/../skel/*"),"./")
-elsif ARGV[0] == "check"
- puts "check...".color :green
- Xpub::BookManager.instance.check option
+elsif ARGV[0] == 'build'
+  puts 'build...'.color :green
+  Xpub::BookManager.instance.build option
+elsif ARGV[0] == 'clean'
+  puts 'clean...'.color :green
+  FileUtils.remove_entry_secure("#{cur_dir}/tmp")
+  Dir.mkdir("#{cur_dir}/tmp")
+  FileUtils.remove_entry_secure("#{cur_dir}/output")
+  Dir.mkdir("#{cur_dir}/output")
+elsif ARGV[0] == 'init'
+  if File.file?("#{cur_dir}/Xpub")
+    puts "File exist. #{cur_dir}/Xpub".color :red
+    exit
+  end
+  puts 'init...'.color :green
+  FileUtils.cp_r(Dir.glob(File.dirname(__FILE__) + '/../skel/*'), './')
+elsif ARGV[0] == 'check'
+  puts 'check...'.color :green
+  Xpub::BookManager.instance.check option
 else
- puts opt.help
- exit
+  puts opt.help
+  exit
 end

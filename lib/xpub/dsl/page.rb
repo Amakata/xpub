@@ -1,36 +1,36 @@
+# Xpub module
 module Xpub
- class CallBook
-  class CallLatexBuilder
-   class CallLatexOp
+  class CallBook
+    class CallLatexBuilder
+      class CallLatexOp
+        def initialize(name, book, builder)
+          @name = name
+          @book = book
+          @builder = builder
+        end
 
-    def initialize name, book, builder
-     @name = name
-     @book = book
-     @builder = builder
-    end
-    def validate
-    end
+        def validate
+        end
 
-    def template_path
-     "#{Dir::getwd}/theme/#{@builder.theme}/#{@name}/#{@metadata}.erb"
-    end
+        def template_path
+          "#{Dir.getwd}/theme/#{@builder.theme}/#{@name}/#{@metadata}.erb"
+        end
 
-    def latex book, builder
-     f = open template_path
-     erb = ERB.new f.read, nil, "-"
-     f.close
-     erb.result(binding)
-    end
+        def latex(book, builder)
+          f = open template_path
+          erb = ERB.new f.read, nil, '-'
+          f.close
+          erb.result(binding)
+        end
+      end
 
-   end
+      class CallImgPageLatexOp < CallLatexOp
+        dsl_accessor :topoffset, default: '0in'
+        dsl_accessor :leftoffset, default: '0in'
+        dsl_accessor :file
 
-   class CallImgPageLatexOp < CallLatexOp
-    dsl_accessor :topoffset, :default => "0in"
-    dsl_accessor :leftoffset, :default => "0in"
-    dsl_accessor :file
-
-    def latex book, builder
-     <<"EOS"
+        def latex(_book, _builder)
+          <<"EOS"
 \\enlargethispage{200truemm}%
 \\thispagestyle{empty}%
 \\vspace*{-1truein}
@@ -41,20 +41,20 @@ module Xpub
 \\includegraphics[width=\\paperheight,height=\\paperwidth]{#{file}}
 \\clearpage\n
 EOS
-    end
-   end
+        end
+      end
 
-   class CallEmptyPageLatexOp < CallLatexOp
-    dsl_accessor :no_page_number, :default => false
+      class CallEmptyPageLatexOp < CallLatexOp
+        dsl_accessor :no_page_number, default: false
 
-    def latex book, builder
-     (no_page_number ? "\\thispagestyle{empty}" : "")  + "　\\clearpage\n"
-    end
-   end
+        def latex(_book, _builder)
+          (no_page_number ? '\\thispagestyle{empty}' : '') + "　\\clearpage\n"
+        end
+      end
 
-   class CallInnerTitlePageLatexOp < CallLatexOp
-    def latex book, builder
-     <<"EOS"
+      class CallInnerTitlePageLatexOp < CallLatexOp
+        def latex(book, _builder)
+          <<"EOS"
 \\makeatletter
 {
 \\thispagestyle{empty}%
@@ -71,7 +71,7 @@ EOS
 \\end{center}
 \\vspace*{1.5cm}
 \\begin{center}
-{\\Large #{book.creators.map { |c| c.name }.join " "}}
+{\\Large #{book.creators.map(&:name).join ' '}}
 \\end{center}
 \\vspace*{1.5cm}
 \\begin{flushleft}
@@ -82,54 +82,43 @@ EOS
 }%
 \\makeatother
 EOS
-    end
-   end
+        end
+      end
 
-   def hyoushi_image_page name, &block
-    call = CallImgPageLatexOp.new name, @book, self
-    if block
-     call.instance_eval &block
-    end
-    call.validate
-    @hyoushi << call
-   end
+      def hyoushi_image_page(name, &block)
+        call = CallImgPageLatexOp.new name, @book, self
+        call.instance_eval(&block) if block
+        call.validate
+        @hyoushi << call
+      end
 
-   def hyoushi_empty_page name, &block
-    call = CallEmptyPageLatexOp.new name, @book, self
-    if block
-     call.instance_eval &block
-    end
-    call.validate
-    @hyoushi << call
-   end
+      def hyoushi_empty_page(name, &block)
+        call = CallEmptyPageLatexOp.new name, @book, self
+        call.instance_eval(&block) if block
+        call.validate
+        @hyoushi << call
+      end
 
-   def hyoushi_inner_title_page name, &block
-    call = CallInnerTitlePageLatexOp.new name, @book, self
-    if block
-     call.instance_eval &block
-    end
-    call.validate
-    @hyoushi << call
-   end
+      def hyoushi_inner_title_page(name, &block)
+        call = CallInnerTitlePageLatexOp.new name, @book, self
+        call.instance_eval(&block) if block
+        call.validate
+        @hyoushi << call
+      end
 
-   def urahyoushi_image_page name, &block
-    call = CallImgPageLatexOp.new name, @book, self
-    if block
-     call.instance_eval &block
-    end
-    call.validate
-    @urahyoushi << call
-   end
+      def urahyoushi_image_page(name, &block)
+        call = CallImgPageLatexOp.new name, @book, self
+        call.instance_eval(&block) if block
+        call.validate
+        @urahyoushi << call
+      end
 
-   def urahyoushi_empty_page name, &block
-    call = CallEmptyPageLatexOp.new name, @book, self
-    if block
-     call.instance_eval &block
+      def urahyoushi_empty_page(name, &block)
+        call = CallEmptyPageLatexOp.new name, @book, self
+        call.instance_eval(&block) if block
+        call.validate
+        @urahyoushi << call
+      end
     end
-    call.validate
-    @urahyoushi << call
-   end
-
   end
- end
 end
