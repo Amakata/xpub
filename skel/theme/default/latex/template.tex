@@ -86,7 +86,7 @@
 
 % ２カラムの幅
 \iftdir
-  \makeatletter 
+  \makeatletter
   \if@stysize
     \setlength\columnsep{1\Cwd}
   \else
@@ -322,6 +322,8 @@ $if(postchaptername)$
 \renewcommand{\postchaptername}{$postchaptername$}
 $endif$
 
+% tightlistの定義を追加(pandoc 1.4以降用)
+\def\tightlist{\itemsep1pt\parskip0pt\parsep0pt}
 
 \begin{document}
 
