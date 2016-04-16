@@ -1,4 +1,3 @@
-# Xpub module
 module Xpub
   class CallBook
     class CallSrcFile
@@ -23,7 +22,7 @@ module Xpub
 
     class CallMdFile < CallSrcFile
       def initialize(file)
-        file += '.md' unless file =~ '.md$'
+        file += '.md' unless file =~ /.md$/
         super file
       end
     end
@@ -31,7 +30,7 @@ module Xpub
     class CallImgFile < CallSrcFile
       def validate
         super
-        raise "Image File Ext is not Image Ext. #{@file}" unless @file =~ '.(jpeg|jpg|png|bmp|pdf)$'
+        raise "Image File Ext is not Image Ext. #{@file}" unless @file =~ /.(jpeg|jpg|png|bmp|pdf)$/
       end
     end
 
