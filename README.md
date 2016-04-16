@@ -50,7 +50,7 @@ $ sudo tlmgr update --self --all
 インストールディレクトリは
 
 * 基本インストール
-/usr/local/texlive/2014
+/usr/local/texlive/2015
 * TEXMFLOCAL
 /usr/local/texlive/texmf-local
 * TEXMFHOME
@@ -64,7 +64,7 @@ $ kpsewhich -var-value TEXMF
 で検索の優先順位がわかるらしい。
 
 
-### pandoc 1.13.2
+### pandoc 1.15.2.1
 
 https://github.com/jgm/pandoc/releases
 
