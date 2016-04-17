@@ -40,8 +40,8 @@ unless File.file?("#{cur_dir}/Xpub") || ARGV[0] == 'init'
   exit
 end
 
-$:.unshift "#{cur_dir}/lib"
-$:.unshift File.dirname(__FILE__) + '/../lib'
+$LOAD_PATH.unshift "#{cur_dir}/lib"
+$LOAD_PATH.unshift File.dirname(__FILE__) + '/../lib'
 
 require 'xpub/dsl_accessor'
 require 'xpub/dsl/book'
