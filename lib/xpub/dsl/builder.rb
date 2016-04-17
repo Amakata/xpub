@@ -49,11 +49,10 @@ module Xpub
         puts cmd_line.color :cyan
         stdout, stderr, status = Open3.capture3 cmd_line
         puts stdout.color :green if option[:v] || status != 0
-        if status != 0
-          puts stderr.color :red
-          puts 'error!'.color :red
-          exit
-        end
+        return unless status != 0
+        puts stderr.color :red
+        puts 'error!'.color :red
+        exit
       end
     end
 
