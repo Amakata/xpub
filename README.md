@@ -288,27 +288,65 @@ PDFでは、下記の指定で改ページを行うことができます。EPUB�
 ### 游明朝体・游ゴシック体
 
 ```
-$ sudo mkdir -p /usr/local/texlive/texmf-local/fonts/opentype/yu-osx
-$ cd /usr/local/texlive/texmf-local/fonts/opentype/yu-osx
-$ sudo ln -fs "/Library/Fonts/Yu Gothic Bold.otf" YuGo-Bold.otf
-$ sudo ln -fs "/Library/Fonts/Yu Gothic Medium.otf" YuGo-Medium.otf
-$ sudo ln -fs "/Library/Fonts/Yu Mincho Demibold.otf" YuMin-Demibold.otf
-$ sudo ln -fs "/Library/Fonts/Yu Mincho Medium.otf" YuMin-Medium.otf
-$ sudo mktexlsr
-$ sudo updmap-sys --setoption kanjiEmbed yu-osx
+sudo mkdir -p /usr/local/texlive/texmf-local/fonts/opentype/yu-osx
+cd /usr/local/texlive/texmf-local/fonts/opentype/yu-osx
+sudo ln -fs "/Library/Fonts/Yu Gothic Bold.otf" YuGo-Bold.otf
+sudo ln -fs "/Library/Fonts/Yu Gothic Medium.otf" YuGo-Medium.otf
+sudo ln -fs "/Library/Fonts/Yu Mincho Demibold.otf" YuMin-Demibold.otf
+sudo ln -fs "/Library/Fonts/Yu Mincho Medium.otf" YuMin-Medium.otf
+sudo mktexlsr
+sudo updmap-sys --setoption kanjiEmbed yu-osx
 ```
 
 ### ヒラギノフォント
 
 ```
-$ sudo mkdir -p /usr/local/texlive/texmf-local/fonts/opentype/hiragino/
-$ cd /usr/local/texlive/texmf-local/fonts/opentype/hiragino/
-$ sudo ln -fs "/Library/Fonts/ヒラギノ明朝 Pro W3.otf" ./HiraMinPro-W3.otf
-$ sudo ln -fs "/Library/Fonts/ヒラギノ明朝 Pro W6.otf" ./HiraMinPro-W6.otf
-$ sudo ln -fs "/Library/Fonts/ヒラギノ丸ゴ Pro W4.otf" ./HiraMaruPro-W4.otf
-$ sudo ln -fs "/Library/Fonts/ヒラギノ角ゴ Pro W3.otf" ./HiraKakuPro-W3.otf
-$ sudo ln -fs "/Library/Fonts/ヒラギノ角ゴ Pro W6.otf" ./HiraKakuPro-W6.otf
-$ sudo ln -fs "/Library/Fonts/ヒラギノ角ゴ Std W8.otf" ./HiraKakuStd-W8.otf
-$ sudo mktexlsr
-$ sudo updmap-sys --setoption kanjiEmbed hiragino
+sudo mkdir -p /usr/local/texlive/texmf-local/fonts/opentype/hiragino/
+cd /usr/local/texlive/texmf-local/fonts/opentype/hiragino/
+sudo ln -fs "/Library/Fonts/ヒラギノ明朝 Pro W3.otf" ./HiraMinPro-W3.otf
+sudo ln -fs "/Library/Fonts/ヒラギノ明朝 Pro W6.otf" ./HiraMinPro-W6.otf
+sudo ln -fs "/Library/Fonts/ヒラギノ丸ゴ Pro W4.otf" ./HiraMaruPro-W4.otf
+sudo ln -fs "/Library/Fonts/ヒラギノ角ゴ Pro W3.otf" ./HiraKakuPro-W3.otf
+sudo ln -fs "/Library/Fonts/ヒラギノ角ゴ Pro W6.otf" ./HiraKakuPro-W6.otf
+sudo ln -fs "/Library/Fonts/ヒラギノ角ゴ Std W8.otf" ./HiraKakuStd-W8.otf
+sudo mktexlsr
+sudo updmap-sys --setoption kanjiEmbed hiragino
 ```
+
+### El Capitanでのフォント指定
+
+El Capitanで上記をしたらうまく動かなくなってしまった。
+
+TexLive 2015だと下記の
+http://osksn2.hep.sci.osaka-u.ac.jp/~taku/osx/embed_hiragino.html
+で紹介されているやり方で上手くいった。
+
+1. バージョン確認
+
+```
+tlmgr info jfontmaps
+```
+
+と打ち、revision 38527 以降であることを確認する。
+
+2. もしrevision が38527 より前の場合は、
+
+```
+ sudo tlmgr update --self --all
+```
+でアップグレード。
+
+
+3. 下記を実行してフォント登録
+```
+cd /usr/local/texlive/2015/texmf-dist/scripts/cjk-gs-integrate
+sudo perl cjk-gs-integrate.pl --link-texmf --force
+sudo mktexlsr
+
+kanji-config-updmap hiragino-elcapitan          (ヒラギノの N シリーズでない方を埋め込む場合)
+kanji-config-updmap hiragino-elcapitan-pron     (ヒラギノの N シリーズを埋め込む場合)
+```
+
+游明朝体・游ゴシック体は仕様が変わって簡単には使えなくなった模様。
+
+http://doratex.hatenablog.jp/entry/20151008/1444310306
