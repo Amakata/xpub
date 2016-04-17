@@ -91,33 +91,28 @@ $ xpub init
 ```
 $ xpub build
 ```
+上記コマンドを実行することで、カレントディレクトリのXpub設定ファイルを元にビルドします。
 
-カレントディレクトリのXpub設定ファイルを元にビルドします。
-
-```
-$ xpub book --book=sample
-```
-
-Xpub設定ファイルのbook sampleのみビルドします。
 
 ```
-$ xpub book --builder=epub
+$ xpub build --book=sample
 ```
-
-Xpub設定ファイルのbuilder epubのみビルドします。
+上記コマンドを実行することで、Xpub設定ファイルのbook sampleのみビルドします。
 
 ```
-$ xpub book -v
+$ xpub build --builder=epub
 ```
+上記コマンドを実行することで、Xpub設定ファイルのbuilder epubのみビルドします。
 
-コマンドラインの実行結果を結果にかかわらず詳細に出力します。
+```
+$ xpub build -v
+```
+上記コマンドを実行することで、コマンドラインの実行結果を結果にかかわらず詳細に出力します。
 
 ```
 $ xpub book --pandoc-json-output
 ```
-
-pandocのjsonオブジェクトをtmpフォルダに生成します。デバック用です。
-
+上記コマンドを実行することで、pandocのjsonオブジェクトをtmpフォルダに生成します。デバック用です。
 
 ## クリア
 
@@ -125,7 +120,7 @@ pandocのjsonオブジェクトをtmpフォルダに生成します。デバッ�
 $ xpub clean
 ```
 
-カレントディレクトリのtmpディレクトリ、outputディレクトリをクリアします。
+上記コマンドを実行することで、カレントディレクトリのtmpディレクトリ、outputディレクトリをクリアします。
 
 
 # Xpubファイルの形式
