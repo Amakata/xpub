@@ -1,0 +1,4 @@
+xpub:
+  build: .
+  volumes:
+    - .:/root/
